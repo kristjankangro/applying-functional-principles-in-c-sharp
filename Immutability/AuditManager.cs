@@ -9,7 +9,7 @@ public class AuditManager
 		_maxEntriesPerFile = maxEntriesPerFile;
 	}
 
-	public void AddRecord(string currentFile, string visitorName, DateTime timeOfVisit)
+	public FileAction AddRecord(string currentFile, string visitorName, DateTime timeOfVisit)
 	{
 		string[] lines = File.ReadAllLines(currentFile);
 
@@ -55,5 +55,39 @@ public class AuditManager
 				File.Move(tempFile, fileName);
 			}
 		}
+	}
+}
+
+public struct FileAction
+{
+	public readonly string FileName;
+	public readonly string[] Content;
+	public readonly ActionType Type;
+
+
+	public FileAction(string fileName, ActionType type, string[] content)
+	{
+		FileName = fileName;
+		Content = content;
+		Type = type;
+	}
+}
+
+public enum ActionType
+{
+	Create,
+	Update,
+	Delete
+}
+
+public class FileContent
+{
+	public readonly string FileName;
+	public readonly string[] Content;
+
+	public FileContent(string fileName, string[] content)
+	{
+		FileName = fileName;
+		Content = content;
 	}
 }
