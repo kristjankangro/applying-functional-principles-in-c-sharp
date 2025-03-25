@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "example1", "example1\example1.csproj", "{D324001E-632A-4621-8C51-FAE4AEF9E075}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutability", "Immutability\Immutability.csproj", "{D324001E-632A-4621-8C51-FAE4AEF9E075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
