@@ -36,7 +36,7 @@ public class AuditManager
 	private List<AuditEntry> Parse(string[] content) =>
 		content
 			.Select(line => line.Split(';'))
-			.Select(data => 
+			.Select(data =>
 				new AuditEntry(int.Parse(data[0]), data[1], DateTime.Parse(data[2])))
 			.ToList();
 
@@ -47,26 +47,26 @@ public class AuditManager
 		return "Audit_" + (index + 1) + ".txt";
 	}
 
-	public void RemoveMentionsAbout(string visitorName, string directoryName)
-	{
-		foreach (string fileName in Directory.GetFiles(directoryName))
-		{
-			string tempFile = Path.GetTempFileName();
-			List<string> linesToKeep = File
-				.ReadLines(fileName)
-				.Where(line => !line.Contains(visitorName))
-				.ToList();
+	public IReadOnlyList<FileAction> RemoveMentionsAbout(string visitorName, FileContent[] files) =>
+		files.Select(file => RemoveMentionsIn(file, visitorName))
+			.Where(a => a != null)
+			.Select(a => a.Value)
+			.ToList();
 
-			if (linesToKeep.Count == 0)
-			{
-				File.Delete(fileName);
-			}
-			else
-			{
-				File.WriteAllLines(tempFile, linesToKeep);
-				File.Delete(fileName);
-				File.Move(tempFile, fileName);
-			}
-		}
+	private FileAction? RemoveMentionsIn(FileContent file, string visitorName)
+	{
+		var entries = Parse(file.Content);
+
+		var newEntries = entries
+			.Where(entry => entry.Visitor != visitorName)
+			.Select((entry, index) => new AuditEntry(index + 1, entry.Visitor, entry.TimeOfVisit))
+			.ToList();
+
+		if (newEntries.Count == entries.Count)
+			return null;
+		
+		return newEntries.Count == 0
+			? new FileAction(file.FileName, ActionType.Delete, [])
+			: new FileAction(file.FileName, ActionType.Update, Serialize(newEntries));
 	}
 }

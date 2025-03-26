@@ -13,4 +13,5 @@ public struct FileAction
 		Content = content;
 		Type = type;
 	}
+	
 }
