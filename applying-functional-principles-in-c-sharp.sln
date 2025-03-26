@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutability", "Immutability\Immutability.csproj", "{D324001E-632A-4621-8C51-FAE4AEF9E075}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immutability.Tests", "Immutability.Tests\Immutability.Tests.csproj", "{827D6418-C1DB-4001-AD39-7C11A6385813}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D324001E-632A-4621-8C51-FAE4AEF9E075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D324001E-632A-4621-8C51-FAE4AEF9E075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D324001E-632A-4621-8C51-FAE4AEF9E075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{827D6418-C1DB-4001-AD39-7C11A6385813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827D6418-C1DB-4001-AD39-7C11A6385813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827D6418-C1DB-4001-AD39-7C11A6385813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827D6418-C1DB-4001-AD39-7C11A6385813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
