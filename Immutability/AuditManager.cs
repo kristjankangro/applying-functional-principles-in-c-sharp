@@ -9,23 +9,36 @@ public class AuditManager
 		_maxEntriesPerFile = maxEntriesPerFile;
 	}
 
-	public FileAction AddRecord(string currentFile, string visitorName, DateTime timeOfVisit)
+	public FileAction AddRecord(FileContent currentFile, string visitorName, DateTime timeOfVisit)
 	{
-		string[] lines = File.ReadAllLines(currentFile);
+		List<AuditEntry> entries = Parse(currentFile.Content);
 
-		if (lines.Length < _maxEntriesPerFile)
+		if (entries.Count < _maxEntriesPerFile)
 		{
-			int lastIndex = int.Parse(lines.Last().Split(';')[0]);
-			string newLine = (lastIndex + 1) + ";" + visitorName + ';' + timeOfVisit.ToString("s");
-			File.AppendAllLines(currentFile, new[] { newLine });
+			entries.Add(new AuditEntry(entries.Count + 1, visitorName, timeOfVisit));
+			var newContent = Serialize(entries);
+			return new FileAction(currentFile.FileName, ActionType.Update, newContent);
 		}
 		else
 		{
-			string newLine = "1;" + visitorName + ';' + timeOfVisit.ToString("s");
-			string newFileName = GetNewFileName(currentFile);
-			File.WriteAllLines(newFileName, new[] { newLine });
+			var entry = new AuditEntry(1, visitorName, timeOfVisit);
+			var newContent = Serialize([entry]);
+			var newFileName = GetNewFileName(currentFile.FileName);
+			return new FileAction(newFileName, ActionType.Create, newContent);
 		}
 	}
+
+	private static string[] Serialize(List<AuditEntry> entries) =>
+		entries
+			.Select(entry => entry.Number + ";" + entry.Visitor + ";" + entry.TimeOfVisit.ToString("s"))
+			.ToArray();
+
+	private List<AuditEntry> Parse(string[] content) =>
+		content
+			.Select(line => line.Split(';'))
+			.Select(data => 
+				new AuditEntry(int.Parse(data[0]), data[1], DateTime.Parse(data[2])))
+			.ToList();
 
 	private string GetNewFileName(string existingFileName)
 	{
@@ -55,39 +68,5 @@ public class AuditManager
 				File.Move(tempFile, fileName);
 			}
 		}
-	}
-}
-
-public struct FileAction
-{
-	public readonly string FileName;
-	public readonly string[] Content;
-	public readonly ActionType Type;
-
-
-	public FileAction(string fileName, ActionType type, string[] content)
-	{
-		FileName = fileName;
-		Content = content;
-		Type = type;
-	}
-}
-
-public enum ActionType
-{
-	Create,
-	Update,
-	Delete
-}
-
-public class FileContent
-{
-	public readonly string FileName;
-	public readonly string[] Content;
-
-	public FileContent(string fileName, string[] content)
-	{
-		FileName = fileName;
-		Content = content;
 	}
 }
