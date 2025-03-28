@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
-
-namespace Exceptions
+﻿namespace Exceptions
 {
     public class TicketController : Controller
     {
@@ -18,11 +14,11 @@ namespace Exceptions
         [HttpPost]
         public ActionResult BuyTicket(DateTime date, string customerName)
         {
-            Result validationResult = Validate(date, customerName);
+            var validationResult = Validate(date, customerName);
             if (validationResult.IsFailure)
                 return View("Error", validationResult.Error);
 
-            Result reserveResult = _gateway.Reserve(date, customerName);
+            var reserveResult = _gateway.Reserve(date, customerName);
             if (reserveResult.IsFailure)
                 return View("Error", reserveResult.Error);
 
@@ -41,29 +37,6 @@ namespace Exceptions
                 return Result.Fail("Incorrect customer name");
 
             return Result.Ok();
-        }
-    }
-
-
-    public class TheaterGateway
-    {
-        public Result Reserve(DateTime date, string customerName)
-        {
-            try
-            {
-                var client = new TheaterApiClient();
-                client.Reserve(date, customerName);
-
-                return Result.Ok();
-            }
-            catch (HttpRequestException)
-            {
-                return Result.Fail("Unable to connect to the theater. Please try again later.");
-            }
-            catch (InvalidOperationException)
-            {
-                return Result.Fail("Sorry, tickets on this date are no longer available.");
-            }
         }
     }
 }
