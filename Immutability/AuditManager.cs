@@ -47,12 +47,14 @@ public class AuditManager
 		return "Audit_" + (index + 1) + ".txt";
 	}
 
-	public IReadOnlyList<FileAction> RemoveMentionsAbout(string visitorName, FileContent[] files) =>
-		files
+	public IReadOnlyList<FileAction> RemoveMentionsAbout(string visitorName, FileContent[] files)
+	{
+		return files
 			.Select(file => RemoveMentionsIn(file, visitorName))
 			.Where(a => a != null)
 			.Select(a => a.Value)
 			.ToList();
+	}
 
 	private FileAction? RemoveMentionsIn(FileContent file, string visitorName)
 	{
