@@ -48,7 +48,8 @@ public class AuditManager
 	}
 
 	public IReadOnlyList<FileAction> RemoveMentionsAbout(string visitorName, FileContent[] files) =>
-		files.Select(file => RemoveMentionsIn(file, visitorName))
+		files
+			.Select(file => RemoveMentionsIn(file, visitorName))
 			.Where(a => a != null)
 			.Select(a => a.Value)
 			.ToList();
